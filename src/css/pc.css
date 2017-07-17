@@ -16,3 +16,21 @@
 .footer {
     text-align: center;
 }
+
+
+.container {
+    padding-top: 10px;
+}
+.leftContainer {
+    width: 400px;
+    float: left;
+}
+
+.carousel{
+    width: 400px;
+    float: left;
+}
+
+.carousel img{
+    width: 400px;
+}
