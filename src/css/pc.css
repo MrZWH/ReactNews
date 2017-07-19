@@ -3,6 +3,10 @@
     display: flex;
 }
 
+.fl{
+    float: left;
+}
+
 .logo img{
     width: 48px;
     height: 48px;
@@ -28,9 +32,20 @@
 
 .carousel{
     width: 400px;
-    float: left;
 }
 
 .carousel img{
     width: 400px;
+}
+
+.tabs_news{
+    left: 5px;
+}
+
+.topNewsList{
+}
+
+.imageblock{
+    margin-right: 3px;
+    float: left;
 }

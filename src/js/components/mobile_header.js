@@ -45,7 +45,7 @@ class MobileHeader extends React.Component{
     handleSubmit(e) {
         e.preventDefault();
         var myFetchOptions = {
-            methodL: 'GET'
+            method: 'GET'
         };
         this.props.form.validateFields((err, values) => {
         if (!err) {

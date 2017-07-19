@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Router, Route, hashHistory} from 'react-router';
+import {Router, Route, HashRouter} from 'react-router-dom';
 import {Button} from 'antd';
 import PCIndex from './components/pc_index';
 import MobileIndex from './components/mobile_index'
@@ -12,10 +12,14 @@ export default class Root extends React.Component{
         return (
             <div>
                 <MediaQuery query='(min-device-width: 1224px)'>
-                    <PCIndex/>
+                    <HashRouter>
+                        <PCIndex/>
+                    </HashRouter>
                 </MediaQuery>
                 <MediaQuery query='(max-device-width: 1224px)'>
-                    <MobileIndex/>
+                    <HashRouter>
+                        <MobileIndex/>
+                    </HashRouter>
                 </MediaQuery>
             </div>
         )
