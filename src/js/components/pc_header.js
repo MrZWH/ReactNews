@@ -1,22 +1,26 @@
 import React from 'react';
-import { Row, Col} from 'antd';
+import Login from './login';
+import Register from './register';
 import { 
+    Row, 
+    Col,
     Menu,
-    Icon, 
-    Tabs, 
-    message, 
-    Form, 
-    Input, 
-    Button, 
+    Icon,
+    Tabs,
+    Form,
+    Input,
+    Tooltip,
+    Button,
     Checkbox,
     Modal
 } from 'antd';
+
 const FormItem = Form.Item;
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
 const TabPane = Tabs.TabPane;
 
-class PCHeader extends React.Component{
+export default class PCHeader extends React.Component{
     constructor(){
         super();
         this.state = {
@@ -28,6 +32,18 @@ class PCHeader extends React.Component{
             userid: 0,
         }
     };
+
+    componentWillMount() {
+        const userInfo = localStorage.getItem('userInfo') || '';
+        if (userInfo != '' && localStorage.hasLogined == '1') {
+            this.setState({hasLogined: true});
+            this.setState({
+                userNickName: JSON.parse(userInfo).r_userName,
+                userId: localStorage.userId
+            });
+        }
+    }
+
     setModalVisible(value) {
         this.setState({modalVisible: value})
     };
@@ -40,6 +56,23 @@ class PCHeader extends React.Component{
             this.setState({current: e.key})
         }
     };
+
+    callback(key) {
+        if (key == 1) {
+        this.setState({action: 'login'});
+        } else if (key == 2) {
+        this.setState({action: 'register'});
+        }
+    };
+
+    setSet(obj) {
+        this.setState(obj);
+    }
+
+    logout() {
+        localStorage.userInfo = '';
+        this.setState({hasLogined: false});
+    }
 
     handleSubmit(e) {
         e.preventDefault();
@@ -58,22 +91,53 @@ class PCHeader extends React.Component{
         });
     };
     render(){
-        let { getFieldDecorator } = this.props.form;
         const userShow = this.state.hasLogined
         ?
         <Menu.Item key="logout" className="register">
             <Button type="primary" htmlType="button">{this.state.userNickName}</Button>
             &nbsp;&nbsp;
-            <Link target="_blank">
+            <Link to={`/usercenter`} target="_blank">
                 <Button type="dashed" htmlType="button">个人中心</Button>
             </Link>
             &nbsp;&nbsp;
-            <Button type="ghost" htmlType="button">退出</Button>
+            <Button type="ghost" htmlType="button" onClick={this.logout.bind(this)}>退出</Button>
         </Menu.Item>
         :
         <Menu.Item key="register" className="register">
             <Icon type="appstore"/>登录/注册
         </Menu.Item>;
+
+        const formItemLayout = {
+            labelCol: {
+                xs: {
+                    span: 24
+                },
+                sm: {
+                    span: 6
+                }
+            },
+            wrapperCol: {
+                xs: {
+                    span: 24
+                },
+                sm: {
+                    span: 14
+                }
+            }
+        };
+
+        const tailFormItemLayout = {
+            wrapperCol: {
+                xs: {
+                    span: 24,
+                    offset: 0
+                },
+                sm: {
+                    span: 14,
+                    offset: 6
+                }
+            }
+        };
         return(
             <header>
                 <Row>
@@ -85,7 +149,10 @@ class PCHeader extends React.Component{
                         </a>
                     </Col>
                     <Col span={16}>
-                        <Menu mode="horizontal" onClick={this.handleClick.bind(this)} selectedKeys={[this.state.current]}>
+                        <Menu 
+                            mode="horizontal" 
+                            onClick={this.handleClick.bind(this)} 
+                            selectedKeys={[this.state.current]}>
                             <Menu.Item key="top">
                                 <Icon type="appstore"/> 头条
                             </Menu.Item>
@@ -115,34 +182,36 @@ class PCHeader extends React.Component{
                             </Menu.Item>
                             {userShow}
                         </Menu>
-                        <Modal title="用户中心" wrapClassName="vartical-center-modal" visible={this.state.modalVisible}
-                        onCancel={()=>this.setModalVisible(false)} onOk={()=>this.setModalVisible(false) }okText="关闭">
-                            <Tabs type="card">
+                        <Modal 
+                            title="用户中心" 
+                            wrapClassName="vartical-center-modal" 
+                            visible={this.state.modalVisible}
+                            onCancel={()=>this.setModalVisible(false)} 
+                            onOk={()=>this.setModalVisible(false) }
+                            okText="关闭">
+                            <Tabs type="card" onChange={this.callback.bind(this)}>
+                                <TabPane tab="登录" key="1">
+                                    <Login
+                                        formItemLayout={formItemLayout}
+                                        tailFormItemLayout={tailFormItemLayout}
+                                        setModalVisible={this
+                                        .setModalVisible
+                                        .bind(this)}
+                                        action={this.state.action}
+                                        setSet={this
+                                        .setSet
+                                        .bind(this)}>
+                                    </Login>
+                                </TabPane>
                                 <TabPane tab="注册" key="2">
-                                    <Form layout="horizontal" onSubmit={this.handleSubmit.bind(this)}>
-                                        <FormItem label="账户">
-                                            {getFieldDecorator('r_userName', {
-                                                rules: [{ required: true, message: 'Please input your username!' }],
-                                            })(
-                                                <Input prefix={<Icon type="user" style={{ fontSize: 13 }} />} placeholder="Username" />
-                                            )}
-                                        </FormItem>
-                                        <FormItem label="密码">
-                                            {getFieldDecorator('r_password', {
-                                                rules: [{ required: true, message: 'Please input your password!' }],
-                                            })(
-                                                <Input prefix={<Icon type="lock" style={{ fontSize: 13 }} />} type="password" placeholder="Password" />
-                                            )}
-                                        </FormItem>
-                                        <FormItem label="确认密码">
-                                            {getFieldDecorator('r_confirmPassword', {
-                                                rules: [{ required: true, message: '请再次输入您的密码!' }],
-                                            })(
-                                                <Input prefix={<Icon type="lock" style={{ fontSize: 13 }} />} type="password" placeholder="请再次输入您的密码" />
-                                            )}
-                                        </FormItem>
-                                        <Button type="primary" htmlType="submit">注册</Button>
-                                    </Form>
+                                    <Register
+                                        formItemLayout={formItemLayout}
+                                        tailFormItemLayout={tailFormItemLayout}
+                                        setModalVisible={this
+                                        .setModalVisible
+                                        .bind(this)}
+                                        action={this.state.action}>
+                                    </Register>
                                 </TabPane>
                             </Tabs>
                         </Modal>
@@ -153,5 +222,3 @@ class PCHeader extends React.Component{
         )
     }
 }
-
-export default PCHeader = Form.create()(PCHeader);

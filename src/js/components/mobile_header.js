@@ -1,23 +1,34 @@
 import React from 'react';
-import { Row, Col} from 'antd';
-import { 
-    Menu,
-    Icon, 
-    Tabs, 
-    message, 
-    Form, 
-    Input, 
-    Button, 
-    Checkbox,
-    Modal
+import {
+  BrowserRouter as Router,
+  Route,
+  HashRouter,
+  Link,
+  hashHistory,
+} from 'react-router-dom';
+import {
+  Row,
+  Col,
+  Menu,
+  Icon,
+  Tabs,
+  message,
+  Form,
+  Input,
+  Tooltip,
+  Button,
+  Checkbox,
+  Modal
 } from 'antd';
+import Login from './login'
+import Register from './register';
+
 const FormItem = Form.Item;
 const SubMenu = Menu.SubMenu;
 const TabPane = Tabs.TabPane;
 const MenuItemGroup = Menu.ItemGroup;
-import {Router, Route, Link, browserHistory} from 'react-router'
 
-class MobileHeader extends React.Component{
+export default class MobileHeader extends React.Component{
     constructor(){
         super();
         this.state = {
@@ -26,11 +37,23 @@ class MobileHeader extends React.Component{
             action: 'login',
             hasLogined: false,
             userNickName: '',
-            userid: 0,
+            userId: 0,
         }
     };
+
+    componentWillMount() {
+        const userInfo = localStorage.getItem('userInfo') || '';
+        if (userInfo != '' && localStorage.hasLogined == 1) {
+            this.setState({hasLogined :true});
+            this.setState({
+                userNickName: JSON.parse(userInfo).r_userName,
+                userId: localStorage.userId
+            });
+        }
+    }
+
     setModalVisible(value) {
-        this.setState({modalVisible: value})
+        this.setState({modalVisible: value});
     };
 
     handleClick(e) {
@@ -58,58 +81,99 @@ class MobileHeader extends React.Component{
         }
         });
     };
+
     login() {
         this.setModalVisible(true);
     };
+
+    callback(key) {
+        if (key == 1) {
+            this.setState({action: 'login'});
+        } else if (key == 2) {
+            this.setState({action: 'register'});
+        }
+    }
+
+    setSet(obj) {
+        this.setState(obj);
+    }
+
     render(){
-        let { getFieldDecorator } = this.props.form;
-        const userShow = this.state.hasLogined ?
-        <Link>
-            <Icon type="Inbox"/>
-        </Link>
-        :
-        <Icon type="setting" onClick={this.login.bind(this)}/>
+        const userShow = this.state.hasLogined 
+            ? <Link to={`/usercenter`}>
+                <Icon type="Inbox"/>
+              </Link>
+            : <Icon type="setting" onClick={this.login.bind(this)}/>
+        const formItemLayout = {
+            labelCol: {
+                xs: {
+                    span: 24
+                },
+                sm: {
+                    span: 6
+                }
+            },
+            wrapperCol: {
+                xs: {
+                    span: 24
+                },
+                sm: {
+                    span: 14
+                }
+            }
+        };
+        const tailFormItemLayout = {
+            wrapperCol: {
+                xs: {
+                    span: 24,
+                    offset: 0
+                },
+                sm: {
+                    span: 14,
+                    offset: 6
+                }
+            }
+        };
+
         return (
             <div id="mobileheader">
                 <header>
-                    <img src="./src/images/logo.png" alt="logo"/>
+                    <a href="/">
+                        <img src="./src/images/logo.png" alt="logo"/>
+                    </a>
                     <span>ReactNews</span>
                     {userShow}
                 </header>
-                <Modal title="用户中心" wrapClassName="vartical-center-modal" visible={this.state.modalVisible}
-                        onCancel={()=>this.setModalVisible(false)} onOk={()=>this.setModalVisible(false) }okText="关闭">
-                            <Tabs type="card">
-                                <TabPane tab="注册" key="2">
-                                    <Form layout="horizontal" onSubmit={this.handleSubmit.bind(this)}>
-                                        <FormItem label="账户">
-                                            {getFieldDecorator('r_userName', {
-                                                rules: [{ required: true, message: 'Please input your username!' }],
-                                            })(
-                                                <Input prefix={<Icon type="user" style={{ fontSize: 13 }} />} placeholder="Username" />
-                                            )}
-                                        </FormItem>
-                                        <FormItem label="密码">
-                                            {getFieldDecorator('r_password', {
-                                                rules: [{ required: true, message: 'Please input your password!' }],
-                                            })(
-                                                <Input prefix={<Icon type="lock" style={{ fontSize: 13 }} />} type="password" placeholder="Password" />
-                                            )}
-                                        </FormItem>
-                                        <FormItem label="确认密码">
-                                            {getFieldDecorator('r_confirmPassword', {
-                                                rules: [{ required: true, message: '请再次输入您的密码!' }],
-                                            })(
-                                                <Input prefix={<Icon type="lock" style={{ fontSize: 13 }} />} type="password" placeholder="请再次输入您的密码" />
-                                            )}
-                                        </FormItem>
-                                        <Button type="primary" htmlType="submit">注册</Button>
-                                    </Form>
-                                </TabPane>
-                            </Tabs>
-                        </Modal>
+                <Modal 
+                    title="用户中心" 
+                    wrapClassName="vartical-center-modal" 
+                    visible={this.state.modalVisible}
+                    onCancel={()=>this.setModalVisible(false)} 
+                    onOk={()=>this.setModalVisible(false) }
+                    okText="关闭">
+                    <Tabs 
+                        type="card"
+                        onChange={this.callback.bind(this)}>
+                        <TabPane tab="登录" key="1">
+                            <Login
+                                formItemLayout={formItemLayout}
+                                tailFormItemLayout={tailFormItemLayout}
+                                setModalVisible={this.setModalVisible.bind(this)}
+                                action={this.state.action}
+                                setSet={this.setSet.bind(this)}>
+                            </Login>
+                        </TabPane>
+                        <TabPane tab="注册" key="2">
+                            <Register
+                                formItemLayout={formItemLayout}
+                                tailFormItemLayout={tailFormItemLayout}
+                                setModalVisible={this.setModalVisible.bind(this)}
+                                action={this.state.action}>                                
+                            </Register>
+                        </TabPane>
+                    </Tabs>
+                </Modal>
             </div>
         );
     };
 }
-
-export default MobileHeader = Form.create()(MobileHeader);

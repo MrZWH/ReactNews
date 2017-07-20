@@ -10,7 +10,7 @@ import {
 } from 'antd';
 const TabPane = Tabs.TabPane;
 import PCNewsBlock from './pc_news_block';
-import PCNewsImageBlock from './pc_news_image_block'
+import PCNewsImageBlock from './pc_news_image_block';
 
 export default class PCNewsContainer extends React.Component {
 	render() {
