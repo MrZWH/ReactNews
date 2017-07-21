@@ -63,6 +63,7 @@
 
 .topNewsList {
     margin-bottom: 15px;
+    float: left;
 }
 
 .topNewsList li {

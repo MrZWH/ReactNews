@@ -38,7 +38,7 @@ export default class PCNewsImageBlock extends React.Component{
 		?
 		news.map((newsItem, Index)=>(
 			<div key={Index} className="imageblock">
-				<Link to={`details/${newsItem.uniqueksy}`} target="_blank">
+				<Link to={`/details/${newsItem.uniquekey}`} target="_blank">
 					<div className="custom-image">
 						<img src={newsItem.thumbnail_pic_s} style={styleImage} alt=""/>
 					</div>
