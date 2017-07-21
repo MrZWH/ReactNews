@@ -1,5 +1,20 @@
 import React from 'react';
-import {Row, Col, BackTop, Form} from 'antd';
+import {
+	Row, 
+	Col, 
+	BackTop, 
+	Form,
+	Icon,
+	message,
+	Input,
+	Button,
+	CheckBox,
+	Modal,
+	Card,
+	notification,
+} from 'antd';
+
+const FormItem = Form.Item;
 class CommonComments extends React.Component{
 	constructor() {
 		super();
@@ -14,28 +29,45 @@ class CommonComments extends React.Component{
       method: 'GET'
 		};
 		var formdata = this.props.form.getFieldsValue();
-		fetch("http://newsapi.gugujiankong.com/Handler.ashx?action=comment&userid="+localStorage.userid+"&uniquekey="+this.props.uniquekey+"&commnet=", myFetchOptions)
+		fetch("http://newsapi.gugujiankong.com/Handler.ashx?action=comment&userid="+
+		localStorage.userId+
+		"&uniquekey="+this.props.uniquekey+
+		"&commnet="+formdata.remark, myFetchOptions)
     .then(Response=>Response.json())
     .then(json=>{
       this.setState({comments: json});
     })
 	};
+
+	addUserCollection() {
+		var myFetchOptions = {
+			method: 'GET'
+		};
+
+		fetch('http://newsapi.gugujiankong.com/Handler.ashx?action=uc&userid='+localStorage.userId+'&uniquekey='+this.props.uniquekey,myFetchOptions)
+		.then(response => response.json())
+		.then(json => {
+			// 收藏成功以后进行全局提醒
+			notification['success']({message: 'ReactNews提醒', description: '收藏此文章成功'});
+		});
+	}
 
   componentDidMount() {
     var myFetchOptions = {
       method: 'GET'
     };
 
-    fetch("http://newsapi.gugujiankong.com/Handler.ashx?action=getcomments&uniquekey="+this.props.match.uniquekey, myFetchOptions)
+		fetch("http://newsapi.gugujiankong.com/Handler.ashx?action=getcomments&uniquekey="+
+		this.props.uniquekey, myFetchOptions)
     .then(Response=>Response.json())
     .then(json=>{
-      this.setState({comments: json});
+      this.componentDidMount();
     })
     
 	};
 	
 	render() {
-		let {getFieldProps} = this.props.form;
+		let {getFieldDecorator} = this.props.form;
 		const {comments} = this.state;
 		const commentList = comments.length?
 		comments.map((comment, index)=>(
@@ -52,9 +84,19 @@ class CommonComments extends React.Component{
 						{commentList}
 						<Form onSubmit={this.handleSubmit.bind(this)}>
 							<FormItem label="您的评论">
-								<Input type="textarea" placeholder="anyword" {...getFieldProps('remark', {initialValue: ''})}></Input>
+								{getFieldDecorator('remark', {
+									rules: [
+										{
+											required: true,
+											message: '内容不能为空！',
+											whitespace: true,
+										}
+									]
+								})(<Input type="textarea" placeholder="anyword"></Input>)}
 							</FormItem>
 							<Button type="primary" htmlType="submit">提交评论</Button>
+							&nbsp;&nbsp;
+							<Button type="primary" htmlType="button" onClick={this.addUserCollection.bind(this)}>收藏该文章</Button>
 						</Form>
 					</Col>
 				</Row>

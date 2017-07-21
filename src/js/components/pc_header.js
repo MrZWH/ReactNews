@@ -14,6 +14,13 @@ import {
     Checkbox,
     Modal
 } from 'antd';
+import {
+  BrowserRouter as Router,
+  Route,
+  HashRouter,
+  Link,
+  hashHistory,
+} from 'react-router-dom';
 
 const FormItem = Form.Item;
 const SubMenu = Menu.SubMenu;
@@ -38,7 +45,7 @@ export default class PCHeader extends React.Component{
         if (userInfo != '' && localStorage.hasLogined == '1') {
             this.setState({hasLogined: true});
             this.setState({
-                userNickName: JSON.parse(userInfo).r_userName,
+                userNickName: JSON.parse(userInfo).r_username,
                 userId: localStorage.userId
             });
         }
@@ -94,7 +101,7 @@ export default class PCHeader extends React.Component{
         const userShow = this.state.hasLogined
         ?
         <Menu.Item key="logout" className="register">
-            <Button type="primary" htmlType="button">{this.state.userNickName}</Button>
+            <Button type='primary' htmlType='button'>{this.state.userNickName}</Button>
             &nbsp;&nbsp;
             <Link to={`/usercenter`} target="_blank">
                 <Button type="dashed" htmlType="button">个人中心</Button>

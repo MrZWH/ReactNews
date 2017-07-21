@@ -46,7 +46,8 @@ class Login extends React.Component{
                         localStorage.hasLogined = '1';
                         this.props.setSet({userNickName: formData.username});
                         message.success('登录成功！');
-                        this.props.form.setModalVisible(false);
+                        this.props.form.resetFields();
+                        this.props.setModalVisible(false);
                     }
                 } else {
                     message.error('账号或密码错误！');

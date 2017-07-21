@@ -12,6 +12,8 @@ import PCIndex from './components/pc_index';
 import PCNewsDetails from './components/pc_news_details';
 import MobileNewsDetails from './components/mobile_news_details';
 import MobileIndex from './components/mobile_index';
+import PCUsercenter from './components/pc_usercenter';
+import MobileUsercenter from './components/mobile_usercenter';
 import 'antd/dist/antd.css';
 import MediaQuery from 'react-responsive';
 
@@ -24,6 +26,7 @@ export default class Root extends React.Component{
                         <div>
                             <Route exact path="/" component={PCIndex}></Route>
                             <Route path="/details/:uniquekey" component={PCNewsDetails}></Route>
+                            <Route path="/usercenter" component={PCUsercenter}></Route>
                         </div>
                     </HashRouter>
                 </MediaQuery>
@@ -32,6 +35,7 @@ export default class Root extends React.Component{
                         <div>
                             <Route exact path="/" component={MobileIndex}></Route>
                             <Route path="/details/:uniquekey" component={MobileNewsDetails}></Route>
+                            <Route path="/usercenter" component={MobileUsercenter}></Route>
                         </div>
                     </HashRouter>
                 </MediaQuery>

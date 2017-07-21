@@ -11,6 +11,7 @@ import {
 const TabPane = Tabs.TabPane;
 import PCNewsBlock from './pc_news_block';
 import PCNewsImageBlock from './pc_news_image_block';
+import PCProduct from './pc_products';
 
 export default class PCNewsContainer extends React.Component {
 	render() {
@@ -49,6 +50,11 @@ export default class PCNewsContainer extends React.Component {
 							<TabPane tab = "国际" key = "2" >
 								<PCNewsBlock count = {22}type = "guoji" width = "100%" bordered = "false" > 
 								</PCNewsBlock> 
+							</TabPane> 
+						</Tabs>
+						<Tabs className = "tabs_product" >
+							<TabPane tab = "ReactNews 产品" key = "1" >
+								<PCProduct></PCProduct>
 							</TabPane> 
 						</Tabs>
 						<PCNewsImageBlock count={8} type="guonei" width="100%" cartTitle="国内新闻" imageWidth="132px"></PCNewsImageBlock>
