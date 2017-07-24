@@ -3,7 +3,8 @@ import MobileHeader from './mobile_header';
 import MobileFooter from './mobile_footer';
 import {Tabs, Carousel} from 'antd';
 const TabPane = Tabs.TabPane;
-import MobileList from './mobile_list'
+import MobileList from './mobile_list';
+import MobileListPullRefresh from './mobile_list_pull_refresh';
 
 export default class PCHeader extends React.Component{
     render(){
@@ -37,7 +38,7 @@ export default class PCHeader extends React.Component{
                         <MobileList count={20} type="shehui"></MobileList>
                     </TabPane>
                     <TabPane tab="国内" key="3">
-                        <MobileList count={20} type="guonei"></MobileList>
+                        <MobileListPullRefresh count={20} type="guonei"></MobileListPullRefresh>
                     </TabPane>
                     <TabPane tab="国际" key="4">
                         <MobileList count={20} type="guoji"></MobileList>
